@@ -8,13 +8,13 @@ Sentinel Supports:
 - **Analysis Engine:** Uses both heuristic checks and an ONNX machine learning model.
 - **Dataset Management:** Runs offline; includes tools to collect and label local results to retrain models. [See Machine Learning Documentation](model/README.md)
 - **Pipeline & Workflow Support:** Integrates with GitHub Actions, GitLab CI, and Jenkins. Features Git diff scanning and build gating.
-- **Configuration:** Managed via .sentinel.yaml or CLI flags.
+- **Configuration:** Managed via .sentinel.yaml or CLI flags. [See Sample YAML file](.sentinel.example.yaml)
 
 ---
 
 Sentinel parses source code and computes a normalized vector (a list of numbers representing different code traits, scaled from 0.0 to 1.0) across various Risk Signals via pkg/analyzer/signals/. These extracted feature weights are passed directly to an ONNX (an open format used to run machine learning models across different backends) Random Forest model (model.onnx) to classify code quality and detect AI-generated vs. human-written patterns.
 
-**Risk Signals** - Evaluates code against the following metrics (scored 0.0–1.0):
+**This currrent active heuristic signals are subject to adjustment and expansion over time.**
 
 | Signal                   | Description                                      |
 | :----------------------- | :----------------------------------------------- |
@@ -30,7 +30,10 @@ Sentinel parses source code and computes a normalized vector (a list of numbers 
 
 ---
 
-**Sample CLI Verbose Output**
+### In Action
+
+Sentinel scans and detects.
+
 ```
 Scanning path: ./examples
 Threshold: 0.70
@@ -76,7 +79,7 @@ Note: Scores represent heuristic and/or ML-based risk estimates. Review is recom
 ================================================================================
 ```
 
-**Available Commands:**
+**Common Usage Examples or Workflows & Combinations:**
 
 ```bash
 ./sentinel
@@ -131,8 +134,9 @@ Note: Scores represent heuristic and/or ML-based risk estimates. Review is recom
 
 ---
 
-#### The easy way to use SENTINEL
-via CI/CD Integration (Github Actions, GitLab CI, and Jenkins)
+### The easy way to use this
+
+CI/CD Integration (Github Actions, GitLab CI, and Jenkins)
 
 **GitHub Actions**
 
@@ -196,12 +200,14 @@ pipeline {
 ./sentinel scan --git-diff origin/main --threshold 0.75
 ```
 
-#### Or download the latest pre-compiled binaries from the [Releases](https://github.com/jakeeviado/sentinel/releases) page and install them directly to your machine (supported on Linux & Windows), or clone the project and build it from source:
+**Local Installation**
+
+You can also download the latest pre-compiled binaries from the [Releases](https://github.com/jakeeviado/sentinel/releases) page and install them directly to your machine (supported on Linux & Windows), or clone the project and build it from source:
 
 ```bash
 git clone [https://github.com/jakeeviado/sentinel.git](https://github.com/jakeeviado/sentinel.git)
 cd sentinel
-go build -o sentinel main.go
+go build
 ```
 
 ---

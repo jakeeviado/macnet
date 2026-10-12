@@ -13,6 +13,12 @@ This directory `root-dir/model` contains the Python training pipeline used to ge
 
 > A default sample **dumb model** (`model.onnx`) and training CSV (`sentinel_training.csv`) are included in this directory out-of-the-box for reference and immediate testing and bootstrapping.
 
+### Model & Dataset Lifecycle
+
+> **ONNX Model (`model.onnx`):** Running `train.py` automatically overwrites the active `model.onnx`. No manual file cleanup is required.
+
+> **Training CSV (`sentinel_training.csv`):** The Go collector (`--collect`) appends new feature rows to the existing CSV file. Delete `sentinel_training.csv` prior to collection if you intend to rebuild the dataset from scratch after changing heuristic feature logic.
+
 ### Prerequisites
 
 Ensure you have Python 3.8+ installed, then install the required dependencies:
