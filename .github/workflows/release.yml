@@ -1,4 +1,11 @@
-name: RELEASE
+# -----------------------------------------------------------------------------
+# Workflow: Release Automation
+# Description: Cross-compiles platform binaries and publishes a GitHub Release.
+# Triggers: Version tags (v*.*.*), manual dispatch.
+# Outputs: Signed release artifacts attached to an official GitHub Release.
+# -----------------------------------------------------------------------------
+
+name: Release
 
 on:
     push:
