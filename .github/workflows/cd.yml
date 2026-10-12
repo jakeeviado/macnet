@@ -1,4 +1,11 @@
-name: BUILD PUSH DOCKER IMAGE
+# -----------------------------------------------------------------------------
+# Workflow: Continuous Delivery (Build and Containerize)
+# Description: Multi-platform container build & push to Docker Hub and GHCR.
+# Triggers: Push to master, version tags (v*.*.*).
+# Outputs: Multi-architecture container images (linux/amd64, linux/arm64).
+# -----------------------------------------------------------------------------
+
+name: Continous Delivery - Build and Containerize
 
 permissions:
     contents: read
@@ -9,8 +16,6 @@ on:
         branches: ["master"]
         tags:
             - "v*.*.*"
-    pull_request:
-        branches: ["master"]
 
 env:
     IMAGE_NAME: sentinel
