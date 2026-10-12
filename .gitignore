@@ -40,7 +40,6 @@ tmp/
 temp/
 
 # Training Data
-sentinel_training.csv
 venv/
 .venv/
 env/
