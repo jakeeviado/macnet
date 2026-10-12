@@ -39,7 +39,7 @@ Thumbs.db
 tmp/
 temp/
 
-# Training Data
+# ML
 venv/
 .venv/
 env/

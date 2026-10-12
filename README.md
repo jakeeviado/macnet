@@ -196,7 +196,13 @@ pipeline {
 ./sentinel scan --git-diff origin/main --threshold 0.75
 ```
 
-**You can also download the latest artifacts from release and install it to your machine (Linux & Windows) or clone the project and build it on your own**
+#### Or download the latest pre-compiled binaries from the [Releases](https://github.com/jakeeviado/sentinel/releases) page and install them directly to your machine (supported on Linux & Windows), or clone the project and build it from source:
+
+```bash
+git clone [https://github.com/jakeeviado/sentinel.git](https://github.com/jakeeviado/sentinel.git)
+cd sentinel
+go build -o sentinel main.go
+```
 
 ---
 
