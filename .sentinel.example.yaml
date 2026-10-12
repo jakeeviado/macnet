@@ -1,4 +1,4 @@
-# ⌀ Sentinel Configuration Example
+# Sentinel Configuration Example
 # Copy this file to a .sentinel.yaml and customize as needed
 
 # Detection threshold (0.0 - 1.0)

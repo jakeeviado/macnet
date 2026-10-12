@@ -39,8 +39,7 @@ Thumbs.db
 tmp/
 temp/
 
-# Training Data
-sentinel_training.csv
+# ML
 venv/
 .venv/
 env/
