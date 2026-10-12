@@ -1,4 +1,11 @@
-name: TEST-LINT-BUILD
+# -----------------------------------------------------------------------------
+# Workflow: Continuous Integration (CI)
+# Description: Validates code quality, executes test suites, and builds binaries.
+# Triggers: Push/PR to master, manual dispatch.
+# Outputs: Compiled platform binaries (Linux/Windows) and test coverage reports.
+# -----------------------------------------------------------------------------
+
+name: Continous Integration (test-lint-build)
 
 on:
     push:
