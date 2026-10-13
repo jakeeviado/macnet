@@ -6,7 +6,7 @@ Sentinel Supports:
 
 - **Languages:** Python, Java, JS/TS, Go, Rust, C/C++, Ruby, PHP, C#, Kotlin, and Swift.
 - **Analysis Engine:** Uses both heuristic checks and an ONNX machine learning model.
-- **Dataset Management:** Runs offline; includes tools to collect and label local results to retrain models. [See Machine Learning Documentation](model/README.md)
+- **Dataset Management:** Runs offline; includes tools to collect and label local results to retrain models. [See Machine Learning Documentation](model)
 - **Pipeline & Workflow Support:** Integrates with GitHub Actions, GitLab CI, and Jenkins. Features Git diff scanning and build gating.
 - **Configuration:** Managed via .sentinel.yaml or CLI flags. [See Sample YAML file](.sentinel.example.yaml)
 
@@ -205,7 +205,7 @@ pipeline {
 You can also download the latest pre-compiled binaries from the [Releases](https://github.com/jakeeviado/sentinel/releases) page and install them directly to your machine (supported on Linux & Windows), or clone the project and build it from source:
 
 ```bash
-git clone [https://github.com/jakeeviado/sentinel.git](https://github.com/jakeeviado/sentinel.git)
+git clone https://github.com/jakeeviado/sentinel.git
 cd sentinel
 go build
 ```
