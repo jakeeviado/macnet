@@ -34,17 +34,9 @@ pip install -r requirements.txt
 python train.py
 ```
 
-### Training & Model Generation
-Run the training script to train the Random Forest Classifier, evaluate accuracy, and export the production-ready ONNX model:
+**Running script:**
 
 ```bash
-python scripts/train.py
-```
-
-This will automatically output a new model.onnx file at the project root, synchronized with the current feature input dimension.
-
-```bash
-# Running script output
 > python train.py
 Converting model to ONNX format...
 Training Complete. Accuracy: 100.00%
