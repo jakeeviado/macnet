@@ -247,32 +247,6 @@ func isSupportedFile(path string) bool {
 	return supportedExts[ext]
 }
 
-func getGitDiffFiles(branch string) ([]string, error) {
-	cmd := exec.Command("git", "diff", "--name-only", branch)
-	output, err := cmd.Output()
-	if err != nil {
-		return nil, fmt.Errorf("git diff command failed: %w", err)
-	}
-
-	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
-	var files []string
-
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-
-		if _, err := os.Stat(line); err == nil {
-			if isSupportedFile(line) {
-				files = append(files, line)
-			}
-		}
-	}
-
-	return files, nil
-}
-
 func getGitDiffContext(branch string) ([]signals.FileDiff, signals.DiffStats, error) {
 	nameCmd := exec.Command("git", "diff", "--name-only", branch)
 	nameOutput, err := nameCmd.Output()
@@ -307,10 +281,10 @@ func getGitDiffContext(branch string) ([]signals.FileDiff, signals.DiffStats, er
 
 	if err == nil {
 		statStr := string(statOutput)
-		fmt.Sscanf(statStr, " %d files changed, %d insertions(+), %d deletions(-)",
+		_, _ = fmt.Sscanf(statStr, " %d files changed, %d insertions(+), %d deletions(-)",
 			&stats.FilesChanged, &stats.Additions, &stats.Deletions)
 		if stats.FilesChanged == 0 {
-			fmt.Sscanf(statStr, " %d file changed, %d insertions(+), %d deletions(-)",
+			_, _ = fmt.Sscanf(statStr, " %d file changed, %d insertions(+), %d deletions(-)",
 				&stats.FilesChanged, &stats.Additions, &stats.Deletions)
 		}
 	}
