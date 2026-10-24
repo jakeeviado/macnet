@@ -1,4 +1,4 @@
-// Package ml provides the machine learning pipeline for Sentinel, including
+// Package ml provides the machine learning pipeline for MACnet, including
 // feature extraction, statistical analysis of heuristic signals, and
 // interfacing with ONNX-based inference engines.
 //
@@ -42,8 +42,8 @@
 package ml
 
 import (
+	"macnet/pkg/models"
 	"math"
-	"sentinel/pkg/models"
 	"slices"
 )
 

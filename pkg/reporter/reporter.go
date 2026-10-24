@@ -6,8 +6,8 @@ import (
 	"os"
 	"sort"
 
-	"sentinel/pkg/detector"
-	"sentinel/pkg/models"
+	"macnet/pkg/detector"
+	"macnet/pkg/models"
 )
 
 type Config struct {
@@ -82,8 +82,13 @@ func (r *Reporter) formatFilesForJSON(files []detector.FileResult) []map[string]
 
 func (r *Reporter) reportText(results *detector.ScanResults) error {
 	fmt.Println()
-	fmt.Println("================================================================================")
-	fmt.Println("                       ⌀ SENTINEL - Code Analysis Report")
+	fmt.Println("░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀")
+	fmt.Println("█ ░ ░ ▓ ░    █ ▓ ░     ░")
+	fmt.Println("▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒")
+	fmt.Println("▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓")
+	fmt.Println("▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░")
+	fmt.Println("        ▀▀▀   ▀▀▀ ▀▀▀")
+	fmt.Println("Analysis Report")
 	fmt.Println("================================================================================")
 	fmt.Println()
 

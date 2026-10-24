@@ -1,11 +1,13 @@
-# Sentinel Configuration Example
-# Copy this file to a .sentinel.yaml and customize as needed
+# MACnet Configuration Example
+# Copy this file to a .macnet.yaml and customize as needed
 
 # Detection threshold (0.0 - 1.0)
 # Files scoring above this threshold are flagged as AI-generated
+# ---------------------------------------------------------------
 threshold: 0.70
 
 # Languages to scan (leave empty to scan all supported languages)
+# ---------------------------------------------------------------
 languages:
     - python
     - java
@@ -14,6 +16,7 @@ languages:
     - go
 
 # Paths to exclude from scanning (glob patterns supported)
+# --------------------------------------------------------
 exclude:
     - "vendor/*"
     - "node_modules/*"
@@ -26,16 +29,21 @@ exclude:
     - "build/*"
 
 # Verbose output (show detailed signal analysis)
+# ----------------------------------------------
 verbose: false
 
 # JSON output format
+# ------------------
 json: false
 
 # Fail build on detection (exit with error code)
+# ----------------------------------------------
 fail_on_detection: true
 
 # Signal weights (advanced configs)
-# Adjust the importance of different detection signals
+# Adjust the importance of different detection signals.
+# Set any signal weight to 0 to completely turn off that specific signal.
+# -----------------------------------------------------------------------
 # signal_weights:
 #   comment_density: 1.0
 #   generic_naming: 1.2

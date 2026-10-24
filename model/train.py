@@ -1,5 +1,5 @@
 """
-Sentinel Machine Learning Training Script
+MACnet Machine Learning Training Script
 ---------------------------------------------------------------------------
 This script processes the heuristic features collected by the Go backend (produced CSV file)
 and trains a Random Forest Classifier to distinguish between human-authored
@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from skl2onnx import convert_sklearn
 from skl2onnx.common.data_types import FloatTensorType
 
-df = pd.read_csv('sentinel_training.csv')
+df = pd.read_csv('macnet_training.csv')
 
 X = df.drop('label', axis=1).values.astype(np.float32)
 y = df['label'].values

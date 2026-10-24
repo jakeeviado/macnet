@@ -1,7 +1,7 @@
 package main
 
 import (
-	"sentinel/cmd"
+	"macnet/cmd"
 )
 
 func main() {

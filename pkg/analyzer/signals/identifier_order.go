@@ -1,8 +1,8 @@
 package signals
 
 import (
+	"macnet/pkg/models"
 	"regexp"
-	"sentinel/pkg/models"
 	"strings"
 )
 

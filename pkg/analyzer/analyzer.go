@@ -39,8 +39,8 @@
 package analyzer
 
 import (
-	"sentinel/pkg/analyzer/signals"
-	"sentinel/pkg/models"
+	"macnet/pkg/analyzer/signals"
+	"macnet/pkg/models"
 )
 
 type Analyzer struct{}
