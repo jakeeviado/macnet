@@ -10,6 +10,7 @@ name: Release
 on:
     push:
         tags:
+            - "v*.*.*"
             - "v*.*.*-*"
     workflow_dispatch:
 
@@ -89,15 +90,22 @@ jobs:
                   path: artifacts
                   merge-multiple: true
 
-            - name: Display artifacts
-              run: ls -R artifacts
+            - name: Check if prerelease
+              id: semver
+              run: |
+                TAG="${GITHUB_REF#refs/tags/}"
+                if [[ "$TAG" == *-* ]]; then
+                  echo "IS_PRERELEASE=true" >> $GITHUB_OUTPUT
+                else
+                  echo "IS_PRERELEASE=false" >> $GITHUB_OUTPUT
+                fi
 
             - name: Create Release
               uses: softprops/action-gh-release@v1
               with:
                   files: artifacts/*
                   draft: false
-                  prerelease: true
+                  prerelease: ${{ steps.semver.outputs.IS_PRERELEASE }}
                   generate_release_notes: true
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
