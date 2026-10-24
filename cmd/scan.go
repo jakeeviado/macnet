@@ -140,7 +140,7 @@ func runScan(cmd *cobra.Command, args []string) error {
 
 	// Fail the build if detections exceed the configured threshold.
 	if failOnDetect && results.HasDetections(threshold) {
-		return fmt.Errorf("High-risk code detected above threshold %.2f", threshold)
+		return fmt.Errorf("high-risk code detected above threshold %.2f", threshold)
 	}
 
 	return nil

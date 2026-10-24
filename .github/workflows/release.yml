@@ -27,7 +27,7 @@ jobs:
             - name: Set up Go
               uses: actions/setup-go@v4
               with:
-                  go-version: "1.21"
+                  go-version: "1.25"  # Updated to match go.mod
 
             - name: Get version
               id: version
@@ -56,7 +56,7 @@ jobs:
             - name: Set up Go
               uses: actions/setup-go@v4
               with:
-                  go-version: "1.21"
+                  go-version: "1.25"
 
             - name: Get version
               id: version
