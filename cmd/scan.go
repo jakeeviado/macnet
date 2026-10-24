@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"macnet/pkg/analyzer/signals"
 	"macnet/pkg/detector"
 	"macnet/pkg/reporter"
 
@@ -89,42 +90,82 @@ func runScan(cmd *cobra.Command, args []string) error {
 		IsMLOnly:     mlOnly,
 	})
 
-	var files []string
-	var err error
+	var results *detector.ScanResults
+	var hasDetections bool
 
 	if gitDiff != "" {
-		files, err = getGitDiffFiles(gitDiff)
-		if err != nil {
-			return fmt.Errorf("failed to get git diff files: %w", err)
+		if verbose {
+			fmt.Fprintf(os.Stderr, "Analyzing git diff against: %s\n", gitDiff)
 		}
+
+		fileDiffs, diffStats, err := getGitDiffContext(gitDiff)
+		if err != nil {
+			return fmt.Errorf("failed to get git diff context: %w", err)
+		}
+
+		if verbose {
+			fmt.Fprintf(os.Stderr, "Diff stats: +%d, -%d across %d files\n",
+				diffStats.Additions, diffStats.Deletions, diffStats.FilesChanged)
+		}
+
+		diffResults, err := det.ScanDiff(fileDiffs, diffStats)
+		if err != nil {
+			return fmt.Errorf("git diff scan failed: %w", err)
+		}
+
+		hasDetections = diffResults.IsFlagged
+
+		var fileResults []detector.FileResult
+		for _, fd := range fileDiffs {
+			fileResults = append(fileResults, detector.FileResult{
+				Path:           fd.Path,
+				Signals:        diffResults.Signals,
+				HeuristicScore: diffResults.FinalScore,
+				Score:          diffResults.FinalScore,
+			})
+		}
+
+		detectedCount := 0
+		if diffResults.IsFlagged {
+			detectedCount = len(fileResults)
+		}
+
+		results = &detector.ScanResults{
+			Files:         fileResults,
+			TotalFiles:    len(fileResults),
+			AverageScore:  diffResults.FinalScore,
+			DetectedFiles: detectedCount,
+			UsedML:        false,
+		}
+
 	} else {
-		files, err = collectFiles(scanPath, excludePaths)
+		files, err := collectFiles(scanPath, excludePaths)
 		if err != nil {
 			return fmt.Errorf("failed to collect files: %w", err)
 		}
-	}
 
-	if verbose {
-		fmt.Fprintf(os.Stderr, "Found %d files to scan\n", len(files))
-	}
-
-	// SCAN FILES
-	results, err := det.ScanFiles(files)
-	if err != nil {
-		return fmt.Errorf("scan failed: %w", err)
-	}
-
-	if trainingData {
-		if label != "flagged" && label != "human" {
-			return fmt.Errorf("please specify --label as 'flagged' or 'human' when using --collect")
+		if verbose {
+			fmt.Fprintf(os.Stderr, "Found %d files to scan\n", len(files))
 		}
 
-		isFlagged := (label == "flagged")
-		if err := det.LogTrainingData(results, isFlagged); err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: Failed to log training data: %v\n", err)
-		} else {
-			fmt.Println("Successfully logged results to macnet_training.csv")
+		results, err = det.ScanFiles(files)
+		if err != nil {
+			return fmt.Errorf("scan failed: %w", err)
 		}
+
+		if trainingData {
+			if label != "flagged" && label != "human" {
+				return fmt.Errorf("please specify --label as 'flagged' or 'human' when using --collect")
+			}
+			isFlagged := (label == "flagged")
+			if err := det.LogTrainingData(results, isFlagged); err != nil {
+				fmt.Fprintf(os.Stderr, "Warning: Failed to log training data: %v\n", err)
+			} else {
+				fmt.Println("Successfully logged results to macnet_training.csv")
+			}
+		}
+
+		hasDetections = results.HasDetections(threshold)
 	}
 
 	// REPORT RESULTS
@@ -139,7 +180,7 @@ func runScan(cmd *cobra.Command, args []string) error {
 	}
 
 	// Fail the build if detections exceed the configured threshold.
-	if failOnDetect && results.HasDetections(threshold) {
+	if failOnDetect && hasDetections {
 		return fmt.Errorf("high-risk code detected above threshold %.2f", threshold)
 	}
 
@@ -230,4 +271,48 @@ func getGitDiffFiles(branch string) ([]string, error) {
 	}
 
 	return files, nil
+}
+
+func getGitDiffContext(branch string) ([]signals.FileDiff, signals.DiffStats, error) {
+	nameCmd := exec.Command("git", "diff", "--name-only", branch)
+	nameOutput, err := nameCmd.Output()
+	if err != nil {
+		return nil, signals.DiffStats{}, fmt.Errorf("git diff name-only failed: %w", err)
+	}
+
+	lines := strings.Split(strings.TrimSpace(string(nameOutput)), "\n")
+	var fileDiffs []signals.FileDiff
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+
+		if _, err := os.Stat(line); err == nil && isSupportedFile(line) {
+			contentBytes, err := os.ReadFile(line)
+			if err != nil {
+				continue
+			}
+			fileDiffs = append(fileDiffs, signals.FileDiff{
+				Path:    line,
+				Content: string(contentBytes),
+			})
+		}
+	}
+
+	statCmd := exec.Command("git", "diff", "--shortstat", branch)
+	statOutput, err := statCmd.Output()
+	stats := signals.DiffStats{FilesChanged: len(fileDiffs)}
+
+	if err == nil {
+		statStr := string(statOutput)
+		fmt.Sscanf(statStr, " %d files changed, %d insertions(+), %d deletions(-)",
+			&stats.FilesChanged, &stats.Additions, &stats.Deletions)
+		if stats.FilesChanged == 0 {
+			fmt.Sscanf(statStr, " %d file changed, %d insertions(+), %d deletions(-)",
+				&stats.FilesChanged, &stats.Additions, &stats.Deletions)
+		}
+	}
+	return fileDiffs, stats, nil
 }

@@ -1,6 +1,6 @@
 ## Introduction
 
-**MACnet - Multi-language Analysis & Code Network** is a command-line tool used for multi-language code analysis. It flags risks and bugs to assist manual code reviews, particularly on AI-assisted codebases.
+**MACnet** (Multi-language Analysis & Code Network) is a command-line tool used for multi-language code analysis. It flags risks and bugs to assist manual code reviews, particularly on AI-assisted codebases.
 
 MACnet Supports:
 
@@ -40,13 +40,16 @@ Scanning path: ./examples
 Threshold: 0.70
 Found 7 files to scan
 
-░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
-█ ░ ░ ▓ ░    █ ▓ ░     ░
-▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
-▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓
-▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
-        ▀▀▀   ▀▀▀ ▀▀▀
-Analysis Report
+================================================================================
+
+                           ░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
+                           █ ░ ░ ▓ ░    █ ▓ ░     ░
+                           ▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
+                           ▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓
+                           ▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
+                                   ▀▀▀   ▀▀▀ ▀▀▀
+                            MACnet Analysis Report
+
 ================================================================================
 
 Detection Mode:       Heuristics Only
@@ -70,7 +73,7 @@ examples/flagged/python/flagged_2.py
    Score: 0.80 | Language: python
    Signals:
      • emoji_sentiment (0.80): High density of informal emojis in production code
-       Emojis found: 🚀 (1), ✨ (1), ✅ (1)
+       Emojis found: ✨ (1), ✅ (1), 🚀 (1)
      • formatting_consistency (0.50): Unusually rigid indentation uniformity across a large file
        Unique indentation levels: 3
 
@@ -93,7 +96,8 @@ examples/flagged/python/flagged_3.py
 
 ================================================================================
 FAILED: 2 file(s) require attention (risk threshold exceeded)
-Note: Scores represent heuristic and/or ML-based risk estimates. Review is recommended for flagged files.
+Note: Scores represent heuristic and/or ML-based risk estimates. 
+Review is recommended for flagged files.
 ================================================================================
 ```
 
@@ -236,6 +240,6 @@ MACnet is an aid for code quality and review; it is not intended to determine au
 This is a hobby and personal project
 
 ### License
-Open Sourced - You are free to fork, modify, distribute, and train your own ONNX model on this.
-
 Licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+
+Open Sourced - You are free to fork, modify, distribute, and train your own ONNX model on this.

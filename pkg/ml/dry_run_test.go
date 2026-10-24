@@ -31,7 +31,7 @@ func RunDryRun(code string, language string) {
 	}()
 
 	az := analyzer.New()
-	signals := az.Analyze(code, language)
+	signals := az.AnalyzeFile(code, language)
 
 	result, err := det.Detect(signals, language, code)
 	if err != nil {

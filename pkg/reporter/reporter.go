@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
+	"unicode/utf8"
 
 	"macnet/pkg/detector"
 	"macnet/pkg/models"
@@ -82,13 +84,42 @@ func (r *Reporter) formatFilesForJSON(files []detector.FileResult) []map[string]
 
 func (r *Reporter) reportText(results *detector.ScanResults) error {
 	fmt.Println()
-	fmt.Println("░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀")
-	fmt.Println("█ ░ ░ ▓ ░    █ ▓ ░     ░")
-	fmt.Println("▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒")
-	fmt.Println("▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓")
-	fmt.Println("▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░")
-	fmt.Println("        ▀▀▀   ▀▀▀ ▀▀▀")
-	fmt.Println("Analysis Report")
+	fmt.Println("================================================================================")
+	fmt.Println()
+
+	logoLines := []string{
+		"░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀",
+		"█ ░ ░ ▓ ░    █ ▓ ░     ░",
+		"▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒",
+		"▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓",
+		"▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░",
+		"        ▀▀▀   ▀▀▀ ▀▀▀",
+		" MACnet Analysis Report",
+	}
+
+	maxLen := 0
+	for _, line := range logoLines {
+		if l := utf8.RuneCountInString(line); l > maxLen {
+			maxLen = l
+		}
+	}
+
+	totalWidth := 80
+	padding := 0
+	if maxLen < totalWidth {
+		padding = (totalWidth - maxLen) / 2
+	}
+	indent := strings.Repeat(" ", padding)
+
+	for _, line := range logoLines {
+		if line == "" {
+			fmt.Println()
+		} else {
+			fmt.Println(indent + line)
+		}
+	}
+
+	fmt.Println()
 	fmt.Println("================================================================================")
 	fmt.Println()
 
@@ -147,7 +178,8 @@ func (r *Reporter) reportText(results *detector.ScanResults) error {
 	} else {
 		fmt.Println("PASSED: All files are within acceptable risk thresholds")
 	}
-	fmt.Println("Note: Scores represent heuristic and/or ML-based risk estimates. Review is recommended for flagged files.")
+	fmt.Println("Note: Scores represent heuristic and/or ML-based risk estimates.")
+	fmt.Println("Review is recommended for flagged files.")
 	fmt.Println("================================================================================")
 
 	return nil

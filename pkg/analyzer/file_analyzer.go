@@ -51,7 +51,7 @@ func New() *Analyzer {
 
 // Analyze runs the full suite of heuristic checks against the provided code.
 // It returns a slice of 'Signals', each representing a different detection metric.
-func (a *Analyzer) Analyze(code string, language string) []models.Signal {
+func (a *Analyzer) AnalyzeFile(code string, language string) []models.Signal {
 	sigList := make([]models.Signal, 0)
 	sigList = append(sigList, signals.CheckGenericNaming(code))
 	sigList = append(sigList, signals.CheckRepetitivePatterns(code))

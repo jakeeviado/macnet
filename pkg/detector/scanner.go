@@ -5,8 +5,19 @@ import (
 	"os"
 	"sync"
 
+	"macnet/pkg/analyzer/signals"
 	"macnet/pkg/models"
 )
+
+// DiffScanResults aggregates results from a git diff evaluation.
+type DiffScanResults struct {
+	FilesChanged int
+	Additions    int
+	Deletions    int
+	Signals      []models.Signal
+	FinalScore   float64
+	IsFlagged    bool
+}
 
 // Concurrently scans a slice of target file paths using a bounded worker pool
 // and returns aggregated scan results and statistics.
@@ -78,7 +89,7 @@ func (d *Detector) scanFile(path string) FileResult {
 
 	codeString := string(fileContent)
 
-	heuristicSignals := d.analyzer.Analyze(codeString, result.Language)
+	heuristicSignals := d.analyzer.AnalyzeFile(codeString, result.Language)
 	result.Signals = heuristicSignals
 	hScore := calculateHeuristicMaxScore(heuristicSignals)
 	result.HeuristicScore = hScore
@@ -104,6 +115,29 @@ func (d *Detector) scanFile(path string) FileResult {
 	}
 
 	return result
+}
+
+// ScanDiff evaluates a git diff changeset instead of individual files.
+func (d *Detector) ScanDiff(files []signals.FileDiff, stats signals.DiffStats) (*DiffScanResults, error) {
+	// 1. Run your diff-specific heuristics (e.g., style drift, addition/deletion ratio)
+	diffSignals := d.analyzer.AnalyzeDiff(files, stats)
+
+	// 2. Calculate composite score from diff signals
+	maxScore := calculateHeuristicMaxScore(diffSignals)
+
+	report := &DiffScanResults{
+		FilesChanged: stats.FilesChanged,
+		Additions:    stats.Additions,
+		Deletions:    stats.Deletions,
+		Signals:      diffSignals,
+		FinalScore:   maxScore,
+		IsFlagged:    maxScore >= d.detectorConfig.Threshold,
+	}
+
+	// Optional: If you have an ML model built for diffs, you can pass diffSignals here.
+	// Otherwise, the heuristic max score or aggregation governs the diff verdict.
+
+	return report, nil
 }
 
 // Evaluates a list of heuristic signals and returns the highest individual risk score.
