@@ -1,5 +1,5 @@
 // Package analyzer provides tools for heuristic analysis of code to detect
-// patterns that may indicate elevated review risk in AI-assisted codebases.
+// patterns that may indicate elevated review risk in codebases.
 //
 // # CRITICAL: ML PIPELINE SYNCHRONIZATION
 //
@@ -19,9 +19,9 @@
 //
 // When adding a New Detection Signal:
 //
-// 1. Define the detection logic:
+// 1. Define the detection logic under analyzer/signals directory:
 //
-//    func (a *Analyzer) checkNewSignal(code string) models.Signal {
+//    func CheckNewSignal(code string) models.Signal {
 //        // implementation logic...
 //        return models.Signal{
 //            Name:        "new_signal", // This name MUST match the ml Registry
@@ -30,9 +30,9 @@
 //        }
 //    }
 //
-// 2. Register it in the Analyze method:
+// 2. Register it in the Analyze method below:
 //
-//    signals = append(signals, a.checkNewSignal(code))
+//    signals = append(siglist, signals.CheckNewSignal(code))
 //
 // 3. Register it in pkg/ml/feature_extractor.go (FeatureRegistry) to ensure ML visibility.
 
