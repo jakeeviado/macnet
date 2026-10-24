@@ -12,13 +12,13 @@ var cfgFile string
 
 const banner = `
 
-	░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
-	█ ░ ░ ▓ ░    █ ▓ ░     ░
-	▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
-	▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓
-	▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
-            ▀▀▀   ▀▀▀ ▀▀▀
-    Multi-language Analysis & Code Network
+░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
+█ ░ ░ ▓ ░    █ ▓ ░     ░
+▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
+▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓
+▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
+        ▀▀▀   ▀▀▀ ▀▀▀
+Multi-language Analysis & Code Network
 `
 
 var rootCmd = &cobra.Command{
