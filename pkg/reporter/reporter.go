@@ -82,8 +82,13 @@ func (r *Reporter) formatFilesForJSON(files []detector.FileResult) []map[string]
 
 func (r *Reporter) reportText(results *detector.ScanResults) error {
 	fmt.Println()
-	fmt.Println("================================================================================")
-	fmt.Println("                       ⌀ MACnet - Code Analysis Report")
+	fmt.Println("░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀")
+	fmt.Println("█ ░ ░ ▓ ░    █ ▓ ░     ░")
+	fmt.Println("▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒")
+	fmt.Println("▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓")
+	fmt.Println("▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░")
+	fmt.Println("        ▀▀▀   ▀▀▀ ▀▀▀")
+	fmt.Println("Analysis Report")
 	fmt.Println("================================================================================")
 	fmt.Println()
 

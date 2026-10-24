@@ -35,35 +35,53 @@ MACnet parses source code and computes a normalized vector (a list of numbers re
 MACnet scans and detects.
 
 ```
+> ./macnet scan --path ./examples --verbose
 Scanning path: ./examples
 Threshold: 0.70
-Found 5 files to scan
+Found 7 files to scan
 
-================================================================================
-                       ⌀ MACnet - Code Analysis Report
+░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
+█ ░ ░ ▓ ░    █ ▓ ░     ░
+▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
+▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓
+▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
+        ▀▀▀   ▀▀▀ ▀▀▀
+Analysis Report
 ================================================================================
 
 Detection Mode:       Heuristics Only
-Total Files Scanned:  5
+Total Files Scanned:  7
 Files Detected:       2
-Average Score:        0.54
+Average Score:        0.47
 Detection Threshold:  0.70
 
 [!] HIGH-RISK FILES (above threshold):
 --------------------------------------------------------------------------------
-examples\flagged\python\flagged_2.py
+examples/flagged/python/flagged_1.py
+   Score: 0.90 | Language: python
+   Signals:
+     • generic_naming (0.90): Very high use of generic variable names
+       Generic name occurrences: 47
+     • formatting_consistency (0.50): Unusually rigid indentation uniformity across a large file
+       Unique indentation levels: 3
+     • code_complexity (0.30): Low cyclomatic complexity
+       Control flow density: 0.07
+examples/flagged/python/flagged_2.py
    Score: 0.80 | Language: python
    Signals:
      • emoji_sentiment (0.80): High density of informal emojis in production code
        Emojis found: 🚀 (1), ✨ (1), ✅ (1)
-     • comment_density (0.50): High comment density (>20%)
-       Comment lines: 5 / 22 (22.7%)
      • formatting_consistency (0.50): Unusually rigid indentation uniformity across a large file
        Unique indentation levels: 3
 
 [?] REVIEW RECOMMENDED (below threshold but noteworthy):
 --------------------------------------------------------------------------------
-examples\flagged\python\flagged_3.py
+examples/flagged/python/flagged_5.py
+   Score: 0.60 | Language: python
+   Signals:
+     • generic_naming (0.60): High use of generic variable names
+       Generic name occurrences: 8
+examples/flagged/python/flagged_3.py
    Score: 0.60 | Language: python
    Signals:
      • identifier_order (0.60): Large identifier blocks in perfect alphabetical order warrant a closer look
@@ -74,7 +92,7 @@ examples\flagged\python\flagged_3.py
        Emojis found: ✨ (1), 🤖 (1)
 
 ================================================================================
-FAILED: 1 file(s) require attention (risk threshold exceeded)
+FAILED: 2 file(s) require attention (risk threshold exceeded)
 Note: Scores represent heuristic and/or ML-based risk estimates. Review is recommended for flagged files.
 ================================================================================
 ```

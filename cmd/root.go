@@ -11,7 +11,6 @@ import (
 var cfgFile string
 
 const banner = `
-
 ░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
 █ ░ ░ ▓ ░    █ ▓ ░     ░
 ▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
@@ -19,6 +18,7 @@ const banner = `
 ▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
         ▀▀▀   ▀▀▀ ▀▀▀
 Multi-language Analysis & Code Network
+──────────────────────────────────────
 `
 
 var rootCmd = &cobra.Command{
