@@ -39,7 +39,7 @@ detect elevated-risk patterns in source code.
   # Scan with high strictness
   $ ./macnet scan --path ./src --threshold 0.85 --verbose
 
-  # Scan you local file changes
+  # Scan your local file changes
   $ ./macnet scan --git-diff origin/master --verbose
 
   # CI/CD: Scan only changed files and fail on detection
