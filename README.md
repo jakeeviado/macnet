@@ -1,18 +1,18 @@
 ## Introduction
 
-**SENTINEL** is a command-line tool used for multi-language code analysis. It flags risks and bugs to assist manual code reviews, particularly on AI-assisted codebases.
+**MACnet - Multi-language Analysis & Code Network** is a command-line tool used for multi-language code analysis. It flags risks and bugs to assist manual code reviews, particularly on AI-assisted codebases.
 
-Sentinel Supports:
+MACnet Supports:
 
 - **Languages:** Python, Java, JS/TS, Go, Rust, C/C++, Ruby, PHP, C#, Kotlin, and Swift.
 - **Analysis Engine:** Uses both heuristic checks and an ONNX machine learning model.
 - **Dataset Management:** Runs offline; includes tools to collect and label local results to retrain models. [See Machine Learning Documentation](model)
 - **Pipeline & Workflow Support:** Integrates with GitHub Actions, GitLab CI, and Jenkins. Features Git diff scanning and build gating.
-- **Configuration:** Managed via .sentinel.yaml or CLI flags. [See Sample YAML file](.sentinel.example.yaml)
+- **Configuration:** Managed via .macnet.yaml or CLI flags. [See Sample YAML file](.macnet.example.yaml)
 
 ---
 
-Sentinel parses source code and computes a normalized vector (a list of numbers representing different code traits, scaled from 0.0 to 1.0) across various Risk Signals via pkg/analyzer/signals/. These extracted feature weights are passed directly to an ONNX (an open format used to run machine learning models across different backends) Random Forest model (model.onnx) to classify code quality and detect AI-generated vs. human-written patterns.
+MACnet parses source code and computes a normalized vector (a list of numbers representing different code traits, scaled from 0.0 to 1.0) across various Risk Signals via pkg/analyzer/signals/. These extracted feature weights are passed directly to an ONNX (an open format used to run machine learning models across different backends) Random Forest model (model.onnx) to classify code quality and detect AI-generated vs. human-written patterns.
 
 **This currrent active heuristic signals are subject to adjustment and expansion over time.**
 
@@ -32,7 +32,7 @@ Sentinel parses source code and computes a normalized vector (a list of numbers 
 
 ### In Action
 
-Sentinel scans and detects.
+MACnet scans and detects.
 
 ```
 Scanning path: ./examples
@@ -40,7 +40,7 @@ Threshold: 0.70
 Found 5 files to scan
 
 ================================================================================
-                       ⌀ SENTINEL - Code Analysis Report
+                       ⌀ MACnet - Code Analysis Report
 ================================================================================
 
 Detection Mode:       Heuristics Only
@@ -82,38 +82,38 @@ Note: Scores represent heuristic and/or ML-based risk estimates. Review is recom
 **Common Usage Examples or Workflows & Combinations:**
 
 ```bash
-./sentinel
+./macnet
 
 # Scan current directory
-./sentinel scan --path .
+./macnet scan --path .
 
 # Scan with specific threshold
-./sentinel scan --path ./src --threshold 0.8
+./macnet scan --path ./src --threshold 0.8
 
 # Scan specific language/s
-./sentinel scan --path . --languages python,javascript
+./macnet scan --path . --languages python,javascript
 
 # Output as JSON
-./sentinel scan --path . --json
+./macnet scan --path . --json
 
 # Fail build if high-risk patterns are detected above threshold
-./sentinel scan --path . --fail-on-detection --threshold 0.75
+./macnet scan --path . --fail-on-detection --threshold 0.75
 
 # Collect training data for Machine Learning Model (directory should be ready inside the project)
-./sentinel scan --path ./examples/flagged --collect --label flagged
-./sentinel scan --path ./examples/human --collect --label human
+./macnet scan --path ./examples/flagged --collect --label flagged
+./macnet scan --path ./examples/human --collect --label human
 
 # Hybrid Mode (Default when --model is provided)
 # Blends ML probability with heuristic patterns using a weighted average.
-./sentinel scan --path . --model ./model/model.onnx --ml-weight 0.7 --verbose
+./macnet scan --path . --model ./model/model.onnx --ml-weight 0.7 --verbose
 
 # Heuristics Only
 # Ignores the ML model entirely and looks for raw code patterns.
-./sentinel scan --path . --no-ml --verbose
+./macnet scan --path . --no-ml --verbose
 
 # ML Only
 # Forces the detector to rely primarily on the model. 
-./sentinel scan --path . --ml-only --model ./model/model.onnx --verbose
+./macnet scan --path . --ml-only --model ./model/model.onnx --verbose
 ```
 
 **Flags:**
@@ -141,35 +141,35 @@ CI/CD Integration (Github Actions, GitLab CI, and Jenkins)
 **GitHub Actions**
 
 ```yaml
-name: SENTINEL CODE SCANNER
+name: MACnet
 on: [pull_request]
 
 jobs:
-  sentinel:
+  macnet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       
-      - name: Download Sentinel
+      - name: Download MACnet
         run: |
-          curl -L https://github.com/jakeeviado/sentinel/releases/latest/download/sentinel-linux-amd64 -o sentinel
-          chmod +x sentinel
+          curl -L https://github.com/jakeeviado/macnet/releases/latest/download/macnet-linux-amd64 -o macnet
+          chmod +x macnet
       
       - name: Scan Code
-        run: ./sentinel scan --path . --threshold 0.75 --fail-on-detection
+        run: ./macnet scan --path . --threshold 0.75 --fail-on-detection
 ```
 
 **GitLab CI**
 
 ```yaml
-sentinel:
+macnet:
   stage: test
   script:
-    - curl -L https://github.com/jakeeviado/sentinel/releases/latest/download/sentinel-linux-amd64 -o sentinel
-    - chmod +x sentinel
-    - ./sentinel scan --path . --threshold 0.75 --fail-on-detection
+    - curl -L https://github.com/jakeeviado/macnet/releases/latest/download/macnet-linux-amd64 -o macnet
+    - chmod +x macnet
+    - ./macnet scan --path . --threshold 0.75 --fail-on-detection
   only:
     - merge_requests
 ```
@@ -180,12 +180,12 @@ sentinel:
 pipeline {
     agent any
     stages {
-        stage('SENTINEL CODE SCANNER') {
+        stage('MACnet') {
             steps {
                 sh '''
-                    curl -L https://github.com/jakeeviado/sentinel/releases/latest/download/sentinel-linux-amd64 -o sentinel
-                    chmod +x sentinel
-                    ./sentinel scan --path . --threshold 0.75 --fail-on-detection
+                    curl -L https://github.com/jakeeviado/macnet/releases/latest/download/macnet-linux-amd64 -o macnet
+                    chmod +x macnet
+                    ./macnet scan --path . --threshold 0.75 --fail-on-detection
                 '''
             }
         }
@@ -197,23 +197,23 @@ pipeline {
 
 ```bash
 # Scan only files changed in PR
-./sentinel scan --git-diff origin/main --threshold 0.75
+./macnet scan --git-diff origin/main --threshold 0.75
 ```
 
 **Local Installation**
 
-You can also download the latest pre-compiled binaries from the [Releases](https://github.com/jakeeviado/sentinel/releases) page and install them directly to your machine (supported on Linux & Windows), or clone the project and build it from source:
+You can also download the latest pre-compiled binaries from the [Releases](https://github.com/jakeeviado/macnet/releases) page and install them directly to your machine (supported on Linux & Windows), or clone the project and build it from source:
 
 ```bash
-git clone https://github.com/jakeeviado/sentinel.git
-cd sentinel
+git clone https://github.com/jakeeviado/macnet.git
+cd macnet
 go build
 ```
 
 ---
 
 ### Disclaimer
-Sentinel is an aid for code quality and review; it is not intended to determine authorship or replace human judgment. Results are probabilistic and may include false positives.
+MACnet is an aid for code quality and review; it is not intended to determine authorship or replace human judgment. Results are probabilistic and may include false positives.
 
 This is a hobby and personal project
 

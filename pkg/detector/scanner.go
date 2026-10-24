@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"sentinel/pkg/models"
+	"macnet/pkg/models"
 )
 
 // Concurrently scans a slice of target file paths using a bounded worker pool

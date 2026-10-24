@@ -1,5 +1,5 @@
 """
-Example AI-generated Python code for testing Sentinel
+Example AI-generated Python code for testing MACnet
 This file exhibits common patterns of AI-generated code
 """
 

@@ -11,23 +11,21 @@ import (
 var cfgFile string
 
 const banner = `
-   ▄████████    ▄████████ ███▄▄▄▄       ███      ▄█  ███▄▄▄▄      ▄████████  ▄█
-  ███    ███   ███    ███ ███▀▀▀██▄ ▀█████████▄ ███  ███▀▀▀██▄   ███    ███ ███
-  ███    █▀    ███    █▀  ███   ███    ▀███▀▀██ ███▌ ███   ███   ███    █▀  ███
-  ███         ▄███▄▄▄     ███   ███     ███   ▀ ███▌ ███   ███  ▄███▄▄▄     ███
-▀███████████ ▀▀███▀▀▀     ███   ███     ███     ███▌ ███   ███ ▀▀███▀▀▀     ███
-         ███   ███    █▄  ███   ███     ███     ███  ███   ███   ███    █▄  ███
-   ▄█    ███   ███    ███ ███   ███     ███     ███  ███   ███   ███    ███ ███▌    ▄
- ▄████████▀    ██████████  ▀█   █▀     ▄████▀   █▀    ▀█   █▀    ██████████ █████▄▄██
-                                                                         ▀
-        The quality safety net for AI-assisted codebases, not a gatekeeper
+
+	░▄█ ▀▀▄ ▀▀█  ▀▀▄ ▀▀█  ▀▀▀
+	█ ░ ░ ▓ ░    █ ▓ ░     ░
+	▓ ▒ ▒▀▒ ▒    ▓ ▒ ▒▀    ▒
+	▒ ▓ ▓ ░ ▓ ▄  ▒ ░ ▓ ▄   ▓
+	▀ ▀ ▀ ▀ ▀▀▀  ░ ▀ ▀▀█   ░
+            ▀▀▀   ▀▀▀ ▀▀▀
+    Multi-language Analysis & Code Network
 `
 
 var rootCmd = &cobra.Command{
-	Use:   "sentinel",
-	Short: "Sentinel - A risk analysis tool for AI-assisted codebases.",
+	Use:   "macnet",
+	Short: "MACnet - Multi-language Analysis & Code Network tool for AI-assisted codebases.",
 	Long: banner + `
-Sentinel uses a hybrid approach (Heuristics + Machine Learning) to
+MACnet uses a hybrid approach (Heuristics + Machine Learning) to
 detect elevated-risk patterns in source code.
 
 ` + "── LANGUAGES SUPPORTED ──────────────────────────────────────────" + `
@@ -36,13 +34,13 @@ detect elevated-risk patterns in source code.
 
 ` + "── QUICK START ──────────────────────────────────────────────────" + `
   # Scan current directory with default settings
-  $ ./sentinel scan
+  $ ./macnet scan
 
   # Scan with high strictness
-  $ ./sentinel scan --path ./src --threshold 0.85 --verbose
+  $ ./macnet scan --path ./src --threshold 0.85 --verbose
 
   # CI/CD: Scan only changed files and fail on detection
-  $ ./sentinel scan --git-diff main --fail-on-detection
+  $ ./macnet scan --git-diff main --fail-on-detection
 
 ` + "──────────────────────────────────────────────────────────────────",
 }
@@ -57,7 +55,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sentinel.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.macnet.yaml)")
 	rootCmd.PersistentFlags().Bool("verbose", false, "enable verbose output with detailed logging")
 	rootCmd.PersistentFlags().Bool("json", false, "output results in JSON format for CI/CD integration")
 
@@ -82,7 +80,7 @@ func initConfig() {
 		viper.AddConfigPath(home)
 		viper.AddConfigPath(".")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".sentinel")
+		viper.SetConfigName(".macnet")
 	}
 
 	viper.AutomaticEnv()

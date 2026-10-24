@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"sentinel/pkg/detector"
-	"sentinel/pkg/reporter"
+	"macnet/pkg/detector"
+	"macnet/pkg/reporter"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -36,16 +36,16 @@ var scanCmd = &cobra.Command{
 
 Examples:
   # Scan current directory
-  sentinel scan --path .
+  macnet scan --path .
 
   # Scan with specific languages
-  sentinel scan --path ./src --languages python,java,javascript
+  macnet scan --path ./src --languages python,java,javascript
 
   # Scan git diff against main/master branch
-  sentinel scan --git-diff origin/main --threshold 0.75
+  macnet scan --git-diff origin/main --threshold 0.75
 
   # Fail CI build if high-risk patterns detected
-  sentinel scan --path . --fail-on-detection --threshold 0.8`,
+  macnet scan --path . --fail-on-detection --threshold 0.8`,
 	RunE: runScan,
 }
 
@@ -123,7 +123,7 @@ func runScan(cmd *cobra.Command, args []string) error {
 		if err := det.LogTrainingData(results, isFlagged); err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: Failed to log training data: %v\n", err)
 		} else {
-			fmt.Println("Successfully logged results to sentinel_training.csv")
+			fmt.Println("Successfully logged results to macnet_training.csv")
 		}
 	}
 

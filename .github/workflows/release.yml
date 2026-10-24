@@ -38,13 +38,13 @@ jobs:
                   VERSION: ${{ steps.version.outputs.VERSION }}
               run: |
                   mkdir -p bin
-                  go build -ldflags "-X main.Version=$VERSION" -o bin/sentinel-linux-amd64
+                  go build -ldflags "-X main.Version=$VERSION" -o bin/macnet-linux-amd64
 
             - name: Upload Linux artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: sentinel-linux-amd64
-                  path: bin/sentinel-linux-amd64
+                  name: macnet-linux-amd64
+                  path: bin/macnet-linux-amd64
 
     build-windows:
         name: Build Windows
@@ -67,13 +67,13 @@ jobs:
                   VERSION: ${{ steps.version.outputs.VERSION }}
               run: |
                   mkdir -p bin
-                  go build -ldflags "-X main.Version=$env:VERSION" -o bin/sentinel-windows-amd64.exe
+                  go build -ldflags "-X main.Version=$env:VERSION" -o bin/macnet-windows-amd64.exe
 
             - name: Upload Windows artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: sentinel-windows-amd64
-                  path: bin/sentinel-windows-amd64.exe
+                  name: macnet-windows-amd64
+                  path: bin/macnet-windows-amd64.exe
 
     release:
         name: Create GitHub Release

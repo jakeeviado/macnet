@@ -32,8 +32,8 @@ build/
 Thumbs.db
 
 # Config files (but keep example)
-.sentinel.yaml
-!.sentinel.example.yaml
+.macnet.yaml
+!.macnet.example.yaml
 
 # Temporary files
 tmp/

@@ -1,4 +1,4 @@
-## Introduction to Sentinel Machine Learning
+## Introduction to MACnet Machine Learning
 
 This directory `root-dir/model` contains the Python training pipeline used to generate the ONNX-formatted machine learning model (`model.onnx`) consumed by the Go backend heuristic analysis engine.
 
@@ -9,15 +9,15 @@ This directory `root-dir/model` contains the Python training pipeline used to ge
 ### Data Preparation
 > Ensure to add more or customize the current sample human and flagged codes under the root `examples` directory.
 
-> Ensure that your training data CSV (`sentinel_training.csv`), whether generated locally or via CI/CD pipelines, is placed directly inside this `model/` directory (or update the path in train.py to reference that CSV) before running the training script.
+> Ensure that your training data CSV (`macnet_training.csv`), whether generated locally or via CI/CD pipelines, is placed directly inside this `model/` directory (or update the path in train.py to reference that CSV) before running the training script.
 
-> A default sample **dumb model** (`model.onnx`) and training CSV (`sentinel_training.csv`) are included in this directory out-of-the-box for reference and immediate testing and bootstrapping.
+> A default sample **dumb model** (`model.onnx`) and training CSV (`macnet_training.csv`) are included in this directory out-of-the-box for reference and immediate testing and bootstrapping.
 
 ### Model & Dataset Lifecycle
 
 > **ONNX Model (`model.onnx`):** Running `train.py` automatically overwrites the active `model.onnx`. No manual file cleanup is required.
 
-> **Training CSV (`sentinel_training.csv`):** The Go collector (`--collect`) appends new feature rows to the existing CSV file. Delete `sentinel_training.csv` prior to collection if you intend to rebuild the dataset from scratch after changing heuristic feature logic.
+> **Training CSV (`macnet_training.csv`):** The Go collector (`--collect`) appends new feature rows to the existing CSV file. Delete `macnet_training.csv` prior to collection if you intend to rebuild the dataset from scratch after changing heuristic feature logic.
 
 ### Prerequisites
 

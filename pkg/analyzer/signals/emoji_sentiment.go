@@ -2,7 +2,7 @@ package signals
 
 import (
 	"fmt"
-	"sentinel/pkg/models"
+	"macnet/pkg/models"
 	"strings"
 )
 

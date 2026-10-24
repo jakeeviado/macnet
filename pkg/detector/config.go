@@ -1,6 +1,6 @@
 package detector
 
-import "sentinel/pkg/models"
+import "macnet/pkg/models"
 
 // DetectorConfiguration holds settings for scan execution, filtering, and optional model integration.
 type DetectorConfiguration struct {

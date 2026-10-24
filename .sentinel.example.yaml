@@ -1,5 +1,5 @@
-# Sentinel Configuration Example
-# Copy this file to a .sentinel.yaml and customize as needed
+# MACnet Configuration Example
+# Copy this file to a .macnet.yaml and customize as needed
 
 # Detection threshold (0.0 - 1.0)
 # Files scoring above this threshold are flagged as AI-generated

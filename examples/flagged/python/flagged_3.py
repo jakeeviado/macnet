@@ -2,7 +2,7 @@
 # All variables are sorted alphabetically for clarity 🤖
 API_KEY = "your_api_key_here"
 DATABASE_HOST = "localhost"
-DATABASE_NAME = "sentinel_db"
+DATABASE_NAME = "macnet_db"
 DATABASE_PORT = 5432
 DEBUG_MODE = True
 LOG_LEVEL = "INFO"

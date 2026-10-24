@@ -2,7 +2,7 @@ package ml
 
 import (
 	"fmt"
-	"sentinel/pkg/models"
+	"macnet/pkg/models"
 )
 
 const (

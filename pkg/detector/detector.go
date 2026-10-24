@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"sentinel/pkg/analyzer"
-	"sentinel/pkg/ml"
+	"macnet/pkg/analyzer"
+	"macnet/pkg/ml"
 )
 
 type Detector struct {

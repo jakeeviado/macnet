@@ -2,9 +2,9 @@ package ml
 
 import (
 	"fmt"
+	"macnet/pkg/analyzer"
 	"os"
 	"path/filepath"
-	"sentinel/pkg/analyzer"
 	"testing"
 )
 
@@ -43,7 +43,7 @@ func RunDryRun(code string, language string) {
 	vector := det.featureExtractor.Extract(signals, language, metrics)
 
 	fmt.Println("\n================================================================================")
-	fmt.Printf("                ⌀ SENTINEL - FULL ML PIPELINE DRY RUN\n")
+	fmt.Printf("                ⌀ MACnet - FULL ML PIPELINE DRY RUN\n")
 	fmt.Println("================================================================================")
 	fmt.Printf("  LANGUAGE: %-10s | LINES: %-5d | CHARS: %-5d\n",
 		language, metrics.LineCount, metrics.CharCount)

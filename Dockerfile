@@ -13,7 +13,7 @@ RUN CGO_ENABLED=1 GOOS=linux go build \
     -a \
     -installsuffix cgo \
     -ldflags '-extldflags "-static"' \
-    -o sentinel .
+    -o macnet .
 
 FROM alpine:latest
 
@@ -21,10 +21,10 @@ RUN apk --no-cache add ca-certificates git
 
 WORKDIR /app
 
-COPY --from=builder /build/sentinel /usr/local/bin/sentinel
+COPY --from=builder /build/macnet /usr/local/bin/macnet
 
-RUN addgroup -S sentinel && adduser -S sentinel -G sentinel
-USER sentinel
+RUN addgroup -S macnet && adduser -S macnet -G macnet
+USER macnet
 
-ENTRYPOINT ["sentinel"]
+ENTRYPOINT ["macnet"]
 CMD ["--help"]

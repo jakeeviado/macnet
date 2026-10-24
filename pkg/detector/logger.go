@@ -6,13 +6,13 @@ import (
 	"os"
 	"strconv"
 
-	"sentinel/pkg/ml"
-	"sentinel/pkg/models"
+	"macnet/pkg/ml"
+	"macnet/pkg/models"
 )
 
 // LogTrainingData saves scan results to a CSV file for Machine Learning training purposes.
 func (d *Detector) LogTrainingData(results *ScanResults, isAI bool) error {
-	trainingDataFile, err := os.OpenFile("sentinel_training.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	trainingDataFile, err := os.OpenFile("macnet_training.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
