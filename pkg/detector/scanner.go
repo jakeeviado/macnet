@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"macnet/pkg/analyzer/signals"
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 )
 
 // DiffScanResults aggregates results from a git diff evaluation.
@@ -14,7 +14,7 @@ type DiffScanResults struct {
 	FilesChanged int
 	Additions    int
 	Deletions    int
-	Signals      []models.Signal
+	Signals      []signal.Signal
 	FinalScore   float64
 	IsFlagged    bool
 }
@@ -70,7 +70,7 @@ func (d *Detector) ScanFiles(files []string) (*ScanResults, error) {
 func (d *Detector) scanFile(path string) FileResult {
 	result := FileResult{
 		Path:    path,
-		Signals: make([]models.Signal, 0),
+		Signals: make([]signal.Signal, 0),
 	}
 
 	result.Language = detectLanguage(path)
@@ -135,7 +135,7 @@ func (d *Detector) ScanDiff(files []signals.FileDiff, stats signals.DiffStats) (
 }
 
 // Evaluates a list of heuristic signals and returns the highest individual risk score.
-func calculateHeuristicMaxScore(signals []models.Signal) float64 {
+func calculateHeuristicMaxScore(signals []signal.Signal) float64 {
 	if len(signals) == 0 {
 		return 0.0
 	}

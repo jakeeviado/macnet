@@ -1,30 +1,39 @@
 package signals
 
 import (
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 	"strings"
 )
+
+var styleDriftMeta = signal.SignalMeta{
+	ID:          "G9",
+	Name:        "style_drift",
+	Description: "Inconsistent indentation style across files in one diff",
+	Scope:       signal.ScopeDiff,
+	Class:       signal.ClassStylistic,
+	Tier:        signal.TierDiff,
+	MinProfile:  signal.ProfileStrict,
+	Advisory:    true,
+	Weight:      1.0,
+}
 
 type FileDiff struct {
 	Path    string
 	Content string
 }
 
-// This signal analyzes a collection of files in a git diff to detect
-// jarring discrepancies in indentation styles or line-ending conventions
-func CheckStyleDrift(files []FileDiff) models.Signal {
+// CheckStyleDrift analyzes the files in a diff for jarring discrepancies
+// in indentation style (tabs vs spaces) between files.
+func CheckStyleDrift(files []FileDiff) signal.Signal {
 	if len(files) <= 1 {
-		return models.Signal{Name: "style_drift", Score: 0.0, Description: "Single file diff, no cross-file drift to measure"}
+		return signal.Skipped(styleDriftMeta, "single-file diff, no cross-file drift to measure")
 	}
 
-	fileIndents := make(map[string]string)
+	var tabFiles, spaceFiles []string
 
 	for _, file := range files {
-		lines := strings.Split(file.Content, "")
-		tabCount := 0
-		spaceCount := 0
-
-		for _, line := range lines {
+		tabCount, spaceCount := 0, 0
+		for _, line := range strings.Split(file.Content, "\n") {
 			if strings.HasPrefix(line, "\t") {
 				tabCount++
 			} else if strings.HasPrefix(line, "    ") {
@@ -32,41 +41,34 @@ func CheckStyleDrift(files []FileDiff) models.Signal {
 			}
 		}
 
-		if tabCount > spaceCount {
-			fileIndents[file.Path] = "tabs"
-		} else if spaceCount > 0 {
-			fileIndents[file.Path] = "spaces"
-		} else {
-			fileIndents[file.Path] = "mixed/none"
+		switch {
+		case tabCount > spaceCount:
+			tabFiles = append(tabFiles, file.Path)
+		case spaceCount > 0:
+			spaceFiles = append(spaceFiles, file.Path)
 		}
 	}
 
-	firstStyle := ""
-	driftDetected := false
-	for _, style := range fileIndents {
-		if firstStyle == "" {
-			firstStyle = style
-		} else if style != firstStyle && style != "mixed/none" {
-			driftDetected = true
-			break
-		}
+	if len(tabFiles) == 0 || len(spaceFiles) == 0 {
+		return signal.NewSignal(styleDriftMeta, 0.0)
 	}
 
-	var score float64
-	var description string
-
-	if driftDetected {
-		score = 0.5
-		description = "Inconsistent indentation styles detected across files in the same push"
-	} else {
-		score = 0.0
-		description = "Consistent formatting style across changed files"
+	outliers, label := tabFiles, "indents with tabs"
+	if len(spaceFiles) < len(tabFiles) {
+		outliers, label = spaceFiles, "indents with spaces"
 	}
 
-	return models.Signal{
-		Name:        "style_drift",
-		Score:       score,
-		Description: description,
-		Evidence:    FormatEvidence("Evaluated %d files for cross-file style consistency", len(files)),
+	evidence := make([]signal.Evidence, 0, len(outliers))
+	for _, p := range outliers {
+		evidence = append(evidence, signal.Evidence{
+			Path:   p,
+			Detail: label + " while other changed files do not",
+			Metrics: map[string]float64{
+				"tab_files":   float64(len(tabFiles)),
+				"space_files": float64(len(spaceFiles)),
+			},
+		})
 	}
+
+	return signal.NewSignal(styleDriftMeta, 0.5, evidence...)
 }

@@ -1,6 +1,6 @@
 package detector
 
-import "macnet/pkg/models"
+import "macnet/pkg/signal"
 
 // DetectorConfiguration holds settings for scan execution, filtering, and optional model integration.
 type DetectorConfiguration struct {
@@ -18,7 +18,7 @@ type DetectorConfiguration struct {
 type FileResult struct {
 	Path           string
 	Score          float64
-	Signals        []models.Signal
+	Signals        []signal.Signal
 	Language       string
 	Error          error
 	MLScore        float64

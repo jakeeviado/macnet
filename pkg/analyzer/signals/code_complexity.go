@@ -1,16 +1,31 @@
 package signals
 
 import (
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 	"strings"
 )
 
-// Measures control flow density across the file.
+var codeComplexityMeta = signal.SignalMeta{
+	ID:          "F4",
+	Name:        "code_complexity",
+	Description: "Control flow density",
+	Scope:       signal.ScopeFile,
+	Class:       signal.ClassStructural,
+	Tier:        signal.TierFile,
+	MinProfile:  signal.ProfileLoose,
+	Weight:      1.0,
+}
+
+var controlFlowKeywords = []string{
+	"if", "else", "switch", "case", "for", "while", "do",
+	"try", "catch", "finally", "throw",
+}
+
+// CheckCodeComplexity measures control flow density across the file.
 // Unusually low complexity can indicate shallow or auto-generated logic.
-func CheckCodeComplexity(code string) models.Signal {
-	controlFlowKeywords := []string{
-		"if", "else", "switch", "case", "for", "while", "do",
-		"try", "catch", "finally", "throw",
+func CheckCodeComplexity(code string) signal.Signal {
+	if strings.TrimSpace(code) == "" {
+		return signal.Skipped(codeComplexityMeta, "empty file")
 	}
 
 	lines := strings.Split(code, "\n")
@@ -26,30 +41,25 @@ func CheckCodeComplexity(code string) models.Signal {
 		}
 	}
 
-	if len(lines) == 0 {
-		return models.Signal{Name: "code_complexity", Score: 0.0}
-	}
-
 	complexity := float64(controlFlowCount) / float64(len(lines))
 
 	var score float64
-	var description string
+	var detail string
 
-	if complexity < 0.05 {
-		score = 0.6
-		description = "Unusually low cyclomatic complexity"
-	} else if complexity < 0.1 {
-		score = 0.3
-		description = "Low cyclomatic complexity"
-	} else {
-		score = 0.0
-		description = "Normal code complexity"
+	switch {
+	case complexity < 0.05:
+		score, detail = 0.6, "Unusually low control flow density"
+	case complexity < 0.1:
+		score, detail = 0.3, "Low control flow density"
+	default:
+		return signal.NewSignal(codeComplexityMeta, 0.0)
 	}
 
-	return models.Signal{
-		Name:        "code_complexity",
-		Score:       score,
-		Description: description,
-		Evidence:    FormatEvidence("Control flow density: %.2f", complexity),
-	}
+	return signal.NewSignal(codeComplexityMeta, score, signal.Evidence{
+		Detail: detail,
+		Metrics: map[string]float64{
+			"control_flow_lines":   float64(controlFlowCount),
+			"control_flow_density": complexity,
+		},
+	})
 }

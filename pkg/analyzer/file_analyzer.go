@@ -21,9 +21,9 @@
 //
 // 1. Define the detection logic under analyzer/signals directory:
 //
-//    func CheckNewSignal(code string) models.Signal {
+//    func CheckNewSignal(code string) signal.Signal {
 //        // implementation logic...
-//        return models.Signal{
+//        return signal.Signal{
 //            Name:        "new_signal", // This name MUST match the ml Registry
 //            Score:       calculatedScore,
 //            Description: "What this detects",
@@ -40,7 +40,7 @@ package analyzer
 
 import (
 	"macnet/pkg/analyzer/signals"
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 )
 
 type Analyzer struct{}
@@ -51,8 +51,8 @@ func New() *Analyzer {
 
 // Analyze runs the full suite of heuristic checks against the provided code.
 // It returns a slice of 'Signals', each representing a different detection metric.
-func (a *Analyzer) AnalyzeFile(code string, language string) []models.Signal {
-	sigList := make([]models.Signal, 0)
+func (a *Analyzer) AnalyzeFile(code string, language string) []signal.Signal {
+	sigList := make([]signal.Signal, 0)
 	sigList = append(sigList, signals.CheckGenericNaming(code))
 	sigList = append(sigList, signals.CheckRepetitivePatterns(code))
 	sigList = append(sigList, signals.CheckCodeComplexity(code))

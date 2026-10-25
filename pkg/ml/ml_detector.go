@@ -2,7 +2,7 @@ package ml
 
 import (
 	"fmt"
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 )
 
 const (
@@ -86,7 +86,7 @@ type DetectionResult struct {
 	IsHighRisk     bool
 }
 
-func (m *MLDetector) Detect(signals []models.Signal, language string, code string) (DetectionResult, error) {
+func (m *MLDetector) Detect(signals []signal.Signal, language string, code string) (DetectionResult, error) {
 	if m.onnxDetector == nil || !m.onnxDetector.initialized {
 		hScore := calculateHeuristicMaxScore(signals)
 		return DetectionResult{
@@ -122,7 +122,7 @@ func (m *MLDetector) Detect(signals []models.Signal, language string, code strin
 	}, nil
 }
 
-func calculateHeuristicMaxScore(signals []models.Signal) float64 {
+func calculateHeuristicMaxScore(signals []signal.Signal) float64 {
 	if len(signals) == 0 {
 		return 0.0
 	}
