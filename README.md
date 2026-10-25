@@ -29,8 +29,6 @@ MACnet parses source code and computes a normalized vector (a list of numbers re
 | `identifier_order`       | Suspiciously perfect alphabetical ordering.      |
 | `defensive_ratio`        | Ratio of error handling to functional logic.     |
 
-When scanning a git diff, MACnet also reports diff-level signals. These are advisory: they appear in the report but never fail a build.
-
 ---
 
 ### In Action
