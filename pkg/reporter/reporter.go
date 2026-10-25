@@ -55,6 +55,7 @@ type Config struct {
 type Reporter struct {
 	config Config
 	out    io.Writer
+	err    error
 }
 
 // New returns a Reporter that writes to stdout.
@@ -164,8 +165,19 @@ func (r *Reporter) formatFilesForJSON(files []detector.FileResult) []jsonFile {
 	return output
 }
 
-func (r *Reporter) printf(format string, a ...any) { fmt.Fprintf(r.out, format, a...) }
-func (r *Reporter) println(a ...any)               { fmt.Fprintln(r.out, a...) }
+func (r *Reporter) printf(format string, a ...any) {
+	if r.err != nil {
+		return
+	}
+	_, r.err = fmt.Fprintf(r.out, format, a...)
+}
+
+func (r *Reporter) println(a ...any) {
+	if r.err != nil {
+		return
+	}
+	_, r.err = fmt.Fprintln(r.out, a...)
+}
 
 func (r *Reporter) reportText(results *detector.ScanResults) error {
 	r.println()
@@ -226,7 +238,7 @@ func (r *Reporter) reportText(results *detector.ScanResults) error {
 	r.println("Review is recommended for flagged files.")
 	r.println(heavyRule)
 
-	return nil
+	return r.err
 }
 
 func (r *Reporter) printBanner() {
