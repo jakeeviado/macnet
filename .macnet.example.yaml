@@ -6,6 +6,9 @@
 # ---------------------------------------------------------------
 threshold: 0.70
 
+# Profile choices: strict % loose
+profile: strict
+
 # Languages to scan (leave empty to scan all supported languages)
 # ---------------------------------------------------------------
 languages:

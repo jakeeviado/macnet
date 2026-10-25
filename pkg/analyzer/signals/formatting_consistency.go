@@ -1,52 +1,58 @@
 package signals
 
 import (
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 	"strings"
 )
 
-// Evaluates indentation uniformity. Suspiciously rigid
-// consistency can indicate non-human authorship.
-func CheckFormattingConsistency(code string) models.Signal {
-	lines := strings.Split(code, "\n")
-	if len(lines) < 5 {
-		return models.Signal{Name: "formatting_consistency", Score: 0.0}
-	}
+const minLinesForFormatting = 20
 
+var formattingConsistencyMeta = signal.SignalMeta{
+	ID:          "F5",
+	Name:        "formatting_consistency",
+	Description: "Indentation and style uniformity",
+	Scope:       signal.ScopeFile,
+	Class:       signal.ClassStylistic,
+	Tier:        signal.TierFile,
+	MinProfile:  signal.ProfileLoose,
+	Weight:      1.0,
+}
+
+// CheckFormattingConsistency evaluates indentation uniformity.
+func CheckFormattingConsistency(code string) signal.Signal {
 	indentations := make(map[int]int)
-	for _, line := range lines {
-		if len(strings.TrimSpace(line)) == 0 {
+	nonBlank := 0
+
+	for _, line := range strings.Split(code, "\n") {
+		if strings.TrimSpace(line) == "" {
 			continue
 		}
+		nonBlank++
 
 		indent := 0
 		for _, char := range line {
-			if char == ' ' || char == '\t' {
-				indent++
-			} else {
+			if char != ' ' && char != '\t' {
 				break
 			}
+			indent++
 		}
 		indentations[indent]++
 	}
 
+	if nonBlank < minLinesForFormatting {
+		return signal.Skipped(formattingConsistencyMeta, "file too short to judge indentation")
+	}
+
 	uniqueIndents := len(indentations)
-
-	var score float64
-	var description string
-
-	if uniqueIndents <= 3 && len(lines) > 20 {
-		score = 0.5
-		description = "Unusually rigid indentation uniformity across a large file"
-	} else {
-		score = 0.0
-		description = "Normal formatting variation"
+	if uniqueIndents > 3 {
+		return signal.NewSignal(formattingConsistencyMeta, 0.0)
 	}
 
-	return models.Signal{
-		Name:        "formatting_consistency",
-		Score:       score,
-		Description: description,
-		Evidence:    FormatEvidence("Unique indentation levels: %d", uniqueIndents),
-	}
+	return signal.NewSignal(formattingConsistencyMeta, 0.5, signal.Evidence{
+		Detail: "Unusually rigid indentation uniformity across a large file",
+		Metrics: map[string]float64{
+			"unique_indent_levels": float64(uniqueIndents),
+			"non_blank_lines":      float64(nonBlank),
+		},
+	})
 }

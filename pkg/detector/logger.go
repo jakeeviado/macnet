@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"macnet/pkg/ml"
-	"macnet/pkg/models"
+	"macnet/pkg/signal"
 )
 
 // LogTrainingData saves scan results to a CSV file for Machine Learning training purposes.
@@ -33,7 +33,7 @@ func (d *Detector) LogTrainingData(results *ScanResults, isAI bool) error {
 	}
 
 	if info.Size() == 0 {
-		dummyVector := fe.Extract([]models.Signal{}, "unknown", ml.CodeMetrics{})
+		dummyVector := fe.Extract([]signal.Signal{}, "unknown", ml.CodeMetrics{})
 		header := append(dummyVector.Names, "label")
 		if err := writer.Write(header); err != nil {
 			return err

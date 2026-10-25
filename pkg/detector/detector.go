@@ -16,32 +16,39 @@ type Detector struct {
 
 // Initializes and returns a new Detector instance with the provided configuration,
 // loading the ONNX model if machine learning is enabled.
-func New(config DetectorConfiguration) *Detector {
-	detector := &Detector{
+func New(config DetectorConfiguration) (*Detector, error) {
+	d := &Detector{
 		detectorConfig: config,
-		analyzer:       analyzer.New(),
+		analyzer:       analyzer.New(config.Profile),
 	}
 
-	if config.UseML && config.ModelPath != "" {
-		mlConfig := ml.DetectionConfig{
-			ModelPath:     config.ModelPath,
-			MLWeight:      config.MLWeight,
-			FallbackMode:  !config.IsMLOnly,
-			RequireML:     config.IsMLOnly,
-			MinConfidence: config.Threshold,
-			NumFeatures:   ml.DefaultNumFeatures,
-		}
-
-		machineLearningDetector, err := ml.NewMLDetector(mlConfig)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: ML initialization failed: %v\n", err)
-			fmt.Fprintf(os.Stderr, "Falling back to heuristics-only mode\n")
-		} else {
-			detector.mlDetector = machineLearningDetector
-			if config.IsVerbose {
-				fmt.Fprintf(os.Stderr, "ML model loaded: %s\n", config.ModelPath)
-			}
-		}
+	if config.IsMLOnly && (!config.UseML || config.ModelPath == "") {
+		return nil, fmt.Errorf("ML-only mode requires a model, but none was configured")
 	}
-	return detector
+	if !config.UseML || config.ModelPath == "" {
+		return d, nil
+	}
+
+	mlDetector, err := ml.NewMLDetector(ml.DetectionConfig{
+		ModelPath:     config.ModelPath,
+		MLWeight:      config.MLWeight,
+		FallbackMode:  !config.IsMLOnly,
+		RequireML:     config.IsMLOnly,
+		MinConfidence: config.Threshold,
+		NumFeatures:   ml.NumFeatures,
+	})
+	if err != nil {
+		if config.IsMLOnly {
+			return nil, fmt.Errorf("ML-only mode: failed to load model %s: %w", config.ModelPath, err)
+		}
+		fmt.Fprintf(os.Stderr, "Warning: ML initialization failed: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Falling back to heuristics-only mode\n")
+		return d, nil
+	}
+
+	d.mlDetector = mlDetector
+	if config.IsVerbose {
+		fmt.Fprintf(os.Stderr, "ML model loaded: %s\n", config.ModelPath)
+	}
+	return d, nil
 }

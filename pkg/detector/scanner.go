@@ -5,8 +5,19 @@ import (
 	"os"
 	"sync"
 
-	"macnet/pkg/models"
+	"macnet/pkg/analyzer/signals"
+	"macnet/pkg/signal"
 )
+
+// DiffScanResults aggregates results from a git diff evaluation.
+type DiffScanResults struct {
+	FilesChanged int
+	Additions    int
+	Deletions    int
+	Signals      []signal.Signal
+	FinalScore   float64
+	IsFlagged    bool
+}
 
 // Concurrently scans a slice of target file paths using a bounded worker pool
 // and returns aggregated scan results and statistics.
@@ -59,7 +70,7 @@ func (d *Detector) ScanFiles(files []string) (*ScanResults, error) {
 func (d *Detector) scanFile(path string) FileResult {
 	result := FileResult{
 		Path:    path,
-		Signals: make([]models.Signal, 0),
+		Signals: make([]signal.Signal, 0),
 	}
 
 	result.Language = detectLanguage(path)
@@ -78,7 +89,7 @@ func (d *Detector) scanFile(path string) FileResult {
 
 	codeString := string(fileContent)
 
-	heuristicSignals := d.analyzer.Analyze(codeString, result.Language)
+	heuristicSignals := d.analyzer.AnalyzeFile(codeString, result.Language)
 	result.Signals = heuristicSignals
 	hScore := calculateHeuristicMaxScore(heuristicSignals)
 	result.HeuristicScore = hScore
@@ -106,8 +117,25 @@ func (d *Detector) scanFile(path string) FileResult {
 	return result
 }
 
+// ScanDiff evaluates a git diff changeset instead of individual files.
+func (d *Detector) ScanDiff(files []signals.FileDiff, stats signals.DiffStats) (*DiffScanResults, error) {
+	diffSignals := d.analyzer.AnalyzeDiff(files, stats)
+
+	maxScore := calculateHeuristicMaxScore(diffSignals)
+
+	report := &DiffScanResults{
+		FilesChanged: stats.FilesChanged,
+		Additions:    stats.Additions,
+		Deletions:    stats.Deletions,
+		Signals:      diffSignals,
+		FinalScore:   maxScore,
+		IsFlagged:    maxScore >= d.detectorConfig.Threshold,
+	}
+	return report, nil
+}
+
 // Evaluates a list of heuristic signals and returns the highest individual risk score.
-func calculateHeuristicMaxScore(signals []models.Signal) float64 {
+func calculateHeuristicMaxScore(signals []signal.Signal) float64 {
 	if len(signals) == 0 {
 		return 0.0
 	}

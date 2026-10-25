@@ -1,6 +1,6 @@
 package detector
 
-import "macnet/pkg/models"
+import "macnet/pkg/signal"
 
 // DetectorConfiguration holds settings for scan execution, filtering, and optional model integration.
 type DetectorConfiguration struct {
@@ -12,13 +12,14 @@ type DetectorConfiguration struct {
 	UseML        bool
 	MLWeight     float64
 	IsMLOnly     bool
+	Profile      signal.Profile
 }
 
 // FileResult contains analysis metrics, heuristic signals, scores, and execution metadata for a single scanned file.
 type FileResult struct {
 	Path           string
 	Score          float64
-	Signals        []models.Signal
+	Signals        []signal.Signal
 	Language       string
 	Error          error
 	MLScore        float64
@@ -34,6 +35,7 @@ type ScanResults struct {
 	DetectedFiles int
 	AverageScore  float64
 	UsedML        bool
+	DiffSignals   []signal.Signal
 }
 
 // HasDetections checks whether any scanned file in the report met or exceeded the specified risk threshold.
