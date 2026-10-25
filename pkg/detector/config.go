@@ -12,6 +12,7 @@ type DetectorConfiguration struct {
 	UseML        bool
 	MLWeight     float64
 	IsMLOnly     bool
+	Profile      signal.Profile
 }
 
 // FileResult contains analysis metrics, heuristic signals, scores, and execution metadata for a single scanned file.
@@ -34,6 +35,7 @@ type ScanResults struct {
 	DetectedFiles int
 	AverageScore  float64
 	UsedML        bool
+	DiffSignals   []signal.Signal
 }
 
 // HasDetections checks whether any scanned file in the report met or exceeded the specified risk threshold.

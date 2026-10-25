@@ -345,6 +345,7 @@ func (r *Reporter) printSignals(signals []signal.Signal) {
 			}
 		}
 		r.printf("   Not evaluated: %s\n", strings.Join(parts, ", "))
+		r.println()
 	}
 }
 
