@@ -44,6 +44,3 @@ venv/
 .venv/
 env/
 scripts/venv/
-
-# Important docs
-Heuristics.md
